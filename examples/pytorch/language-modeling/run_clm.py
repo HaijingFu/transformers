@@ -527,7 +527,7 @@ def main():
     num_devices = xr.global_runtime_device_count()
     model_axis = max(model_args.spmd_2d_sharding, 1)
     assert xr.device_type() == 'TPU' or xr.device_type() == 'CUDA', f"Supported hardware are TPU and CUDA. Detected hardware: {xr.device_type()}"
-    if xr.device_type() == 'TPU':
+    if False and xr.device_type() == 'TPU':
         dcn_axis = model_args.spmd_dcn_parallelism
         data_axis = num_devices // model_axis // dcn_axis
         ici_mesh_shape = (1, data_axis, model_axis)
@@ -536,7 +536,7 @@ def main():
                                 dcn_mesh_shape=dcn_mesh_shape,
                                 axis_names=('dcn', 'data', 'model'))
         xs.set_global_mesh(spmd_mesh)
-    elif xr.device_type() == 'CUDA':
+    else:
         data_axis = num_devices // model_axis
         mesh_shape = (1, data_axis, model_axis)
         spmd_mesh = xs.Mesh(np.arange(num_devices), mesh_shape, ('dcn', 'data', 'model'))
